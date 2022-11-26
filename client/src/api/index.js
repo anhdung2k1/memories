@@ -1,6 +1,15 @@
 import axios from 'axios';
 
 const API = axios.create({baseURL: 'http://localhost:5000'})
+// Adding something specific in API
+// Send token to backend and backend will verify that token is valid
+API.interceptors.request.use((req) => {
+    if(localStorage.getItem('profile')){
+        req.headers.authorization = `Bearer ${JSON.parse(localStorage.getItem('profile')).token}`;
+    }
+
+    return req;
+})
 
 export const fetchPosts = () => API.get('/posts');
 export const createPosts = (newPost) => API.post('/posts', newPost);
