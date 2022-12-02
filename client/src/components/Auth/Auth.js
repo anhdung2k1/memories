@@ -6,7 +6,7 @@ import Input from './Input.js';
 import {GoogleLogin } from '@react-oauth/google';
 import {useDispatch} from 'react-redux';
 import jwt_decode from 'jwt-decode';
-import {useNavigate} from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
 import * as actionType from '../../constants/actionTypes.js';
 import {signin,signup} from '../../actions/auth';
 const initialState = { firstName: '', lastName: '', email: '',password: '',confirmPassword: ''};
@@ -16,15 +16,15 @@ const Auth = () => {
   const [isSignUp, setIsSignUp] = useState(false);
   const [formData, setFormData] = useState(initialState);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const history = useHistory();
   const handleSubmit = (e) => {
     e.preventDefault(); // prevent load again
     
     if(isSignUp){
-      dispatch(signup(formData, navigate));
+      dispatch(signup(formData, history));
     }
     else{
-      dispatch(signin(formData,navigate));
+      dispatch(signin(formData,history));
     }
   }
   const handleChange = (e) => {
@@ -39,7 +39,7 @@ const Auth = () => {
       const result = jwt_decode(res.credential);
       try{
         dispatch({type: actionType.AUTH, data: {result}});
-        navigate("/");
+        history.push("/");
       }catch(e){
         console.log(e);
       }

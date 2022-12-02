@@ -1,24 +1,30 @@
 import React from 'react';
 import { Container } from '@material-ui/core';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 
 import Home from './components/Home/Home';
 import Navbar from './components/Navbar/Navbar';
 import Auth from './components/Auth/Auth';
 import {GoogleOAuthProvider} from '@react-oauth/google';
-
-const App = () => (
+import PostDetails from './components/PostDetails/PostDetail.jsx';
+const App = () => {
+  const user = JSON.parse(localStorage.getItem('profile'));
+  return (
   <GoogleOAuthProvider clientId = "890312707554-b73u9stq65c8njg26h9k7bogoi5b1luk.apps.googleusercontent.com">
   <BrowserRouter>
-    <Container maxWidth="lg">
+    <Container maxWidth="xl">
       <Navbar />
-      <Routes>
-        <Route path="/" element = {<Home />} />
-        <Route path="/auth" element = {<Auth/>} />
-      </Routes>
+      <Switch>
+        <Route path="/" exact component = {() => <Redirect to = "/posts" />} />
+        <Route path = "/posts" exact component = {Home} />
+        <Route path = "/posts/search" exact component ={Home} />
+        <Route path = "/posts/:id" exact component = {PostDetails} />
+        <Route path="/auth" exact component = {() => (!user ? <Auth /> : <Redirect to="/posts"/>)} />
+      </Switch>
     </Container>
   </BrowserRouter>
   </GoogleOAuthProvider>
-);
+  )
+};
 
 export default App;
