@@ -24,4 +24,8 @@ export default makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  googleBtn:{
+    margin: theme.spacing(1, 0 , 1),
+    backgroundColor: '#03a9f4',
+  }
 }));

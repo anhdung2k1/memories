@@ -14,7 +14,7 @@ const Form = ({ currentId, setCurrentId }) => {
   const user = JSON.parse(localStorage.getItem('profile'));
   const history = useHistory();
   useEffect(() => {
-    if(!post?.title) clear();
+    if(!post?.title) {clear();}
     if (post) setPostData(post);
   }, [post]);
 
