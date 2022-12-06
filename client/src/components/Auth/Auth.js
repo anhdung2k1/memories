@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import useStyles from './styles.js';
-import {Avatar, Button, Paper, Grid, Typography, Container} from '@material-ui/core';
+import {Avatar, Button, Paper, Grid, Typography, Container} from '@material-ui/core/';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Input from './Input.js';
 import {GoogleLogin } from '@react-oauth/google';
@@ -9,6 +9,8 @@ import jwt_decode from 'jwt-decode';
 import {useHistory} from 'react-router-dom';
 import * as actionType from '../../constants/actionTypes.js';
 import {signin,signup} from '../../actions/auth';
+import jwt from 'jsonwebtoken';
+import axios from 'axios';
 const initialState = { firstName: '', lastName: '', email: '',password: '',confirmPassword: ''};
 const Auth = () => {
   const classes = useStyles();
@@ -37,15 +39,17 @@ const Auth = () => {
   const handleShowPassword = () => setShowPassword((prevShowPassword) => !prevShowPassword);
   const googleSuccess = async (res) => {
       const result = jwt_decode(res.credential);
+      const token = jwt.sign({email: result?.email, id: result?.sub}, 'test', {expiresIn: "1h"});
       try{
-        dispatch({type: actionType.AUTH, data: {result}});
+        console.log(result);
+        dispatch({type: actionType.AUTH, data: {result,token}});
         history.push("/");
       }catch(e){
         console.log(e);
       }
   }
-  const googleFailure = () => {
-    console.log("Google Sign In was unsuccessful. Try again later");
+  const googleError = () => {
+    console.log("Google Error")
   }
   
   return (
@@ -74,7 +78,7 @@ const Auth = () => {
           </Button>
           <GoogleLogin
             onSuccess = {googleSuccess}
-            onError = {googleFailure}
+            onError = {googleError}
           />
           <Grid container justify = "flex-end">
             <Grid item>
